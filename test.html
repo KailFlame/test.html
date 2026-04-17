@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Тест подключения</title>
+</head>
+<body>
+    <h1>Тест подключения к Google Sheets</h1>
+    <pre id="output">Загрузка...</pre>
+
+    <script>
+        // ⚠️ ЗАМЕНИ НА СВОЙ ID ТАБЛИЦЫ!
+        const SPREADSHEET_ID = '1lG7D8K9N8HqHJol6uLzzzbQCeUrG1FmS9trZSBlp7n4';
+        
+        async function testConnection() {
+            const output = document.getElementById('output');
+            
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=SpiderPoints`;
+                output.innerText = 'Отправка запроса...\n' + url + '\n\n';
+                
+                const response = await fetch(url);
+                output.innerText += 'Статус ответа: ' + response.status + '\n';
+                
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                
+                const text = await response.text();
+                output.innerText += 'Получено символов: ' + text.length + '\n\n';
+                output.innerText += 'Первые 500 символов:\n' + text.substring(0, 500);
+                
+            } catch (error) {
+                output.innerText += '\n\n❌ ОШИБКА: ' + error.message;
+            }
+        }
+        
+        testConnection();
+    </script>
+</body>
+</html>
